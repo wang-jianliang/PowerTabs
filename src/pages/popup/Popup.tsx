@@ -14,7 +14,7 @@ const Popup = () => {
       style={{
         backgroundColor: theme === 'light' ? '#fff' : '#000',
       }}>
-      Power tabs
+      <img className="icon" src="../../../icon-full.png" alt="Power Tabs" />
     </div>
   );
 };
