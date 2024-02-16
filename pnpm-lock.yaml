@@ -20,6 +20,9 @@ dependencies:
   construct-style-sheets-polyfill:
     specifier: 3.1.0
     version: 3.1.0
+  pnpm:
+    specifier: ^8.15.3
+    version: 8.15.3
   react:
     specifier: 18.2.0
     version: 18.2.0
@@ -5701,6 +5704,12 @@ packages:
       mlly: 1.4.2
       pathe: 1.1.1
     dev: true
+
+  /pnpm@8.15.3:
+    resolution: {integrity: sha512-3YXNbspkF8b3PbMroetHZ/+0y6T1vwcnhGciyStrnlaizCGLEThbvCsh8YoWpn2nes6um2Gg9WoWQ7JeH7amBQ==}
+    engines: {node: '>=16.14'}
+    hasBin: true
+    dev: false
 
   /postcss@8.4.31:
     resolution: {integrity: sha512-PS08Iboia9mts/2ygV3eLpY5ghnUcfLV/EXTOW1E2qYxJKGGBUtNjN76FYHnMs36RmARn41bC0AZmn+rR0OVpQ==}

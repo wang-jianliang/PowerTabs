@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Collapse, Image, StackDivider, VStack, Wrap, WrapItem } from '@chakra-ui/react';
 import { browser } from 'webextension-polyfill-ts';
 import ScaleButton from './ScaleButton';
@@ -91,7 +91,7 @@ function App() {
                     variant="outline"
                     colorScheme="blue"
                     onClick={() => switchTab(tab.id, tab.windowId)}
-                    fontSize="x-small">
+                    fontSize="small">
                     <Image scale={1} height="1em" marginRight={1} src={tab.favIconUrl}></Image>
                     <Box as="span" display="block" overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis">
                       {tab.title}
