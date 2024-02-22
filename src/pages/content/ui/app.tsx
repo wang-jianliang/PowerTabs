@@ -23,7 +23,6 @@ function App() {
   useEffect(() => {
     if (tabs.length > 0) {
       const ts = groupTabs(tabs, groupField);
-      console.log('grouped tabs:', ts);
       setGroupedTabs(ts);
     }
   }, [tabs, groupField]);
@@ -31,7 +30,6 @@ function App() {
   useEffect(() => {
     if (show) {
       browser.runtime.sendMessage({ command: 'get_tabs' }).then(response => {
-        console.log(response);
         setTabs(response.tabs);
       });
     }
@@ -42,7 +40,6 @@ function App() {
   };
 
   const handleMouseOut = () => {
-    console.log('mouse out');
     setShow(false);
   };
 
@@ -56,8 +53,6 @@ function App() {
 
   document.addEventListener('mouseleave', function (e) {
     if (e.clientY <= 5 && e.clientX <= 200) {
-      // 阈值可以自行设定
-      console.log('The mouse has left the browser window from the top.');
       setShow(true);
     }
   });

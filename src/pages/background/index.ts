@@ -9,15 +9,11 @@ reloadOnUpdate('pages/background');
  */
 reloadOnUpdate('pages/content/style.scss');
 
-console.log('background loaded');
-
 browser.runtime.onMessage.addListener(async request => {
-  console.log(`[background.js]onMessage: ${request} tabId: ${request.tabId}`);
   if (request.command === 'get_tabs') {
     return await browser.tabs
       .query({})
       .then(tabs => {
-        console.log('tabs:', tabs);
         return { tabs: tabs };
       })
       .catch(error => {
@@ -27,13 +23,10 @@ browser.runtime.onMessage.addListener(async request => {
     browser.windows.update(request.windowId, { focused: true }).then(() => {
       browser.tabs
         .update(request.tabId, { active: true })
-        .then(() => {
-          console.log('active tag:', request.tabId);
-        })
+        .then(() => {})
         .catch(error => {
           alert(`Failed to active tab: ${request.tabId}: ${error}`);
         });
     });
   }
 });
-console.log('background loaded end');
