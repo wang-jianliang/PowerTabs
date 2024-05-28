@@ -28,5 +28,21 @@ browser.runtime.onMessage.addListener(async request => {
           alert(`Failed to active tab: ${request.tabId}: ${error}`);
         });
     });
+  } else if (request.command === 'get_position') {
+    return await browser.storage.sync
+      .get('position')
+      .then(response => {
+        return { position: response.position || 'topLeft' };
+      })
+      .catch(error => {
+        alert(`Failed to get position: ${error}`);
+      });
+  } else if (request.command === 'save_position') {
+    return await browser.storage.sync
+      .set({ position: request.position })
+      .then(() => {})
+      .catch(error => {
+        alert(`Failed to save position: ${error}`);
+      });
   }
 });

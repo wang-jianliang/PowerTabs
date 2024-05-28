@@ -1,13 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Collapse, Image, StackDivider, VStack, Wrap, WrapItem } from '@chakra-ui/react';
+import React, { useState, useEffect, use } from 'react';
+import { Box, Center, Collapse, Image, StackDivider, VStack, Wrap, WrapItem } from '@chakra-ui/react';
 import { browser } from 'webextension-polyfill-ts';
 import ScaleButton from './ScaleButton';
+
+function shouldShowTabs(position, x, y) {
+  if (position === 'topLeft') {
+    return y <= 5 && x <= 200;
+  } else if (position === 'topRight') {
+    return y <= 5 && x >= window.innerWidth - 200;
+  } else if (position === 'bottomLeft') {
+    return y >= window.innerHeight - 5 && x <= 200;
+  } else if (position === 'bottomRight') {
+    return y >= window.innerHeight - 5 && x >= window.innerWidth - 200;
+  }
+  return false;
+}
 
 function App() {
   const [show, setShow] = useState(false);
   const [tabs, setTabs] = useState([]);
   const [groupedTabs, setGroupedTabs] = useState({});
   const [groupField] = useState('windowId');
+  const [position, setPosition] = useState('topLeft');
+
+  useEffect(() => {
+    browser.runtime.sendMessage({ command: 'get_position' }).then(response => {
+      console.log(`position: ${response.position}`)
+      setPosition(response.position);
+    });
+  }, []);
 
   const groupTabs = (tabs, field: string) => {
     return tabs.reduce((acc, obj: object) => {
@@ -52,7 +73,7 @@ function App() {
   };
 
   document.addEventListener('mouseleave', function (e) {
-    if (e.clientY <= 5 && e.clientX <= 200) {
+    if (shouldShowTabs(position, e.clientX, e.clientY)) {
       setShow(true);
     }
   });
@@ -60,10 +81,9 @@ function App() {
   return (
     <Collapse in={show}>
       <Box
-        backgroundColor="gray.50"
+        backgroundColor="#FFFFFF"
         position="fixed"
         top="0"
-        bg="Gray.50"
         width="100vw"
         maxHeight="50vh"
         zIndex="10000"
@@ -78,20 +98,23 @@ function App() {
             <Wrap height="100%" key={keyIndex}>
               {groupedTabs[key].map((tab, index) => (
                 <WrapItem key={index}>
-                  <ScaleButton
-                    textAlign="left"
-                    maxW="25ch"
-                    p={2}
-                    size="xs"
-                    variant="outline"
-                    colorScheme="blue"
-                    onClick={() => switchTab(tab.id, tab.windowId)}
-                    fontSize="small">
-                    <Image scale={1} height="1em" marginRight={1} src={tab.favIconUrl}></Image>
-                    <Box as="span" display="block" overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis">
-                      {tab.title}
-                    </Box>
-                  </ScaleButton>
+                  <Box w="26ch">
+                    <ScaleButton
+                      textAlign="left"
+                      maxW="25ch"
+                      p={2}
+                      size="xs"
+                      variant="outline"
+                      bg="gray.50"
+                      colorScheme="blue"
+                      onClick={() => switchTab(tab.id, tab.windowId)}
+                      fontSize="small">
+                      <Image scale={1} height="1em" marginRight={1} src={tab.favIconUrl}></Image>
+                      <Box as="span" display="block" overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis">
+                        {tab.title}
+                      </Box>
+                    </ScaleButton>
+                  </Box>
                 </WrapItem>
               ))}
             </Wrap>

@@ -9,7 +9,7 @@ const manifest = {
   name: 'Power Tabs',
   version: packageJson.version,
   description: packageJson.description,
-  permissions: ['tabs'],
+  permissions: ['tabs', 'storage'],
   options_page: 'src/pages/options/index.html',
   background: {
     service_worker: 'src/pages/background/index.js',
