@@ -1,9 +1,12 @@
-import React, { useState, useEffect, use } from 'react';
-import { Box, Center, Collapse, Image, StackDivider, VStack, Wrap, WrapItem } from '@chakra-ui/react';
+import React, { useState, useEffect } from 'react';
+import { Box, Collapse, Image, StackDivider, VStack, Wrap, WrapItem } from '@chakra-ui/react';
 import { browser } from 'webextension-polyfill-ts';
 import ScaleButton from './ScaleButton';
+import useStorage from '@src/shared/hooks/useStorage';
+import settingsStorage from '@src/shared/storages/settingsStorage';
 
 function shouldShowTabs(position, x, y) {
+  console.log(`shouldShowTabs: ${position}, ${x}, ${y}`);
   if (position === 'topLeft') {
     return y <= 5 && x <= 200;
   } else if (position === 'topRight') {
@@ -12,6 +15,14 @@ function shouldShowTabs(position, x, y) {
     return y >= window.innerHeight - 5 && x <= 200;
   } else if (position === 'bottomRight') {
     return y >= window.innerHeight - 5 && x >= window.innerWidth - 200;
+  } else if (position === 'top') {
+    return y <= 5;
+  } else if (position === 'bottom') {
+    return y >= window.innerHeight - 5;
+  } else if (position === 'left') {
+    return x <= 5;
+  } else if (position === 'right') {
+    return x >= window.innerWidth - 5;
   }
   return false;
 }
@@ -21,14 +32,38 @@ function App() {
   const [tabs, setTabs] = useState([]);
   const [groupedTabs, setGroupedTabs] = useState({});
   const [groupField] = useState('windowId');
-  const [position, setPosition] = useState('topLeft');
+  const [position, setPosition] = useState(null);
+  const [style, setStyle] = useState({} as React.CSSProperties);
+  const settings = useStorage(settingsStorage);
 
   useEffect(() => {
-    browser.runtime.sendMessage({ command: 'get_position' }).then(response => {
-      console.log(`position: ${response.position}`)
-      setPosition(response.position);
-    });
-  }, []);
+    // browser.runtime.sendMessage({ command: 'get_position' }).then(response => {
+    //   console.log(`position: ${response.position}`)
+    //   setPosition(response.position);
+    // });
+    if (!settings) {
+      return;
+    }
+    setPosition(settings.position);
+    switch (settings.position) {
+      case 'top':
+      case 'topLeft':
+      case 'topRight':
+        setStyle({ top: 0, width: '100vw', maxHeight: '50vh' });
+        break;
+      case 'bottom':
+      case 'bottomLeft':
+      case 'bottomRight':
+        setStyle({ bottom: 0, width: '100vw', maxHeight: '50vh' });
+        break;
+      case 'left':
+        setStyle({ left: 0, height: '100vh', maxWidth: '50vw' });
+        break;
+      case 'right':
+        setStyle({ right: 0, height: '100vh', maxWidth: '50vw' });
+        break;
+    }
+  }, [settings]);
 
   const groupTabs = (tabs, field: string) => {
     return tabs.reduce((acc, obj: object) => {
@@ -73,6 +108,10 @@ function App() {
   };
 
   document.addEventListener('mouseleave', function (e) {
+    if (!position) {
+      return;
+    }
+    console.log('mouseleave', e.clientX, e.clientY);
     if (shouldShowTabs(position, e.clientX, e.clientY)) {
       setShow(true);
     }
@@ -83,10 +122,8 @@ function App() {
       <Box
         backgroundColor="#FFFFFF"
         position="fixed"
-        top="0"
-        width="100vw"
-        maxHeight="50vh"
         zIndex="10000"
+        style={style}
         overflowY="auto"
         padding={3}
         rounded="md"
