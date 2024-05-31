@@ -113,6 +113,7 @@ function App() {
     }
     console.log('mouseleave', e.clientX, e.clientY);
     if (shouldShowTabs(position, e.clientX, e.clientY)) {
+      console.log('show tabs');
       setShow(true);
     }
   });
