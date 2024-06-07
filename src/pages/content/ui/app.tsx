@@ -1,31 +1,46 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Collapse, Image, StackDivider, VStack, Wrap, WrapItem } from '@chakra-ui/react';
+import { Box, Image, Slide, StackDivider, VStack, Wrap, WrapItem } from '@chakra-ui/react';
 import { browser } from 'webextension-polyfill-ts';
 import ScaleButton from './ScaleButton';
 import useStorage from '@src/shared/hooks/useStorage';
 import settingsStorage from '@src/shared/storages/settingsStorage';
 
-function shouldShowTabs(position, x, y) {
-  console.log(`shouldShowTabs: ${position}, ${x}, ${y}`);
-  if (position === 'topLeft') {
-    return y <= 5 && x <= 200;
-  } else if (position === 'topRight') {
-    return y <= 5 && x >= window.innerWidth - 200;
-  } else if (position === 'bottomLeft') {
-    return y >= window.innerHeight - 5 && x <= 200;
-  } else if (position === 'bottomRight') {
-    return y >= window.innerHeight - 5 && x >= window.innerWidth - 200;
-  } else if (position === 'top') {
-    return y <= 5;
-  } else if (position === 'bottom') {
-    return y >= window.innerHeight - 5;
-  } else if (position === 'left') {
-    return x <= 5;
-  } else if (position === 'right') {
-    return x >= window.innerWidth - 5;
-  }
-  return false;
-}
+// function shouldShowTabs(position, x, y) {
+//   console.log(`shouldShowTabs: ${position}, ${x}, ${y}`);
+//   if (position === 'topLeft') {
+//     return y <= 5 && x <= 200;
+//   } else if (position === 'topRight') {
+//     return y <= 5 && x >= window.innerWidth - 200;
+//   } else if (position === 'bottomLeft') {
+//     return y >= window.innerHeight - 5 && x <= 200;
+//   } else if (position === 'bottomRight') {
+//     return y >= window.innerHeight - 5 && x >= window.innerWidth - 200;
+//   } else if (position === 'top') {
+//     return y <= 5;
+//   } else if (position === 'bottom') {
+//     return y >= window.innerHeight - 5;
+//   } else if (position === 'left') {
+//     return x <= 5;
+//   } else if (position === 'right') {
+//     return x >= window.innerWidth - 5;
+//   }
+//   return false;
+// }
+
+const siderStyles = {
+  right: {
+    right: '-4px',
+    height: '50vh',
+    width: '8px',
+    top: '25vh',
+  },
+  left: {
+    left: '-4px',
+    height: '50vh',
+    width: '8px',
+    top: '25vh',
+  },
+};
 
 function App() {
   const [show, setShow] = useState(false);
@@ -60,7 +75,7 @@ function App() {
         setStyle({ left: 0, height: '100vh', maxWidth: '50vw' });
         break;
       case 'right':
-        setStyle({ right: 0, height: '100vh', maxWidth: '50vw' });
+        setStyle({ right: 0, top: 0, height: '100vh', maxWidth: '50vw' });
         break;
     }
   }, [settings]);
@@ -107,59 +122,68 @@ function App() {
     });
   };
 
-  document.addEventListener('mouseleave', function (e) {
-    if (!position) {
-      return;
-    }
-    console.log('mouseleave', e.clientX, e.clientY);
-    if (shouldShowTabs(position, e.clientX, e.clientY)) {
-      console.log('show tabs');
-      setShow(true);
-    }
-  });
+  // document.addEventListener('mouseleave', function (e) {
+  //   if (!position) {
+  //     return;
+  //   }
+  //   console.log('mouseleave', e.clientX, e.clientY);
+  //   if (shouldShowTabs(position, e.clientX, e.clientY)) {
+  //     console.log('show tabs');
+  //     setShow(true);
+  //   }
+  // });
 
   return (
-    <Collapse in={show}>
+    <Box>
       <Box
-        backgroundColor="#FFFFFF"
+        onMouseOver={handleMouseOver}
         position="fixed"
         zIndex="10000"
-        style={style}
-        overflowY="auto"
-        padding={3}
-        rounded="md"
-        shadow="md"
-        onMouseOver={handleMouseOver}
-        onMouseOut={handleMouseOut}>
-        <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
-          {Object.keys(groupedTabs).map((key, keyIndex) => (
-            <Wrap height="100%" key={keyIndex}>
-              {groupedTabs[key].map((tab, index) => (
-                <WrapItem key={index}>
-                  <Box w="26ch">
-                    <ScaleButton
-                      textAlign="left"
-                      maxW="25ch"
-                      p={2}
-                      size="xs"
-                      variant="outline"
-                      bg="gray.50"
-                      colorScheme="blue"
-                      onClick={() => switchTab(tab.id, tab.windowId)}
-                      fontSize="small">
-                      <Image scale={1} height="1em" marginRight={1} src={tab.favIconUrl}></Image>
-                      <Box as="span" display="block" overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis">
-                        {tab.title}
-                      </Box>
-                    </ScaleButton>
-                  </Box>
-                </WrapItem>
-              ))}
-            </Wrap>
-          ))}
-        </VStack>
-      </Box>
-    </Collapse>
+        backgroundColor="red"
+        borderRadius="4px"
+        cursor="ew-resize"
+        style={siderStyles[position]}></Box>
+      <Slide in={show}>
+        <Box
+          backgroundColor="#FFFFFF"
+          position="fixed"
+          zIndex="10000"
+          style={style}
+          overflowY="auto"
+          padding={3}
+          rounded="md"
+          shadow="md"
+          onMouseOut={handleMouseOut}>
+          <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
+            {Object.keys(groupedTabs).map((key, keyIndex) => (
+              <Wrap height="100%" key={keyIndex}>
+                {groupedTabs[key].map((tab, index) => (
+                  <WrapItem key={index}>
+                    <Box w="26ch">
+                      <ScaleButton
+                        textAlign="left"
+                        maxW="25ch"
+                        p={2}
+                        size="xs"
+                        variant="outline"
+                        bg="gray.50"
+                        colorScheme="blue"
+                        onClick={() => switchTab(tab.id, tab.windowId)}
+                        fontSize="small">
+                        <Image scale={1} height="1em" marginRight={1} src={tab.favIconUrl}></Image>
+                        <Box as="span" display="block" overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis">
+                          {tab.title}
+                        </Box>
+                      </ScaleButton>
+                    </Box>
+                  </WrapItem>
+                ))}
+              </Wrap>
+            ))}
+          </VStack>
+        </Box>
+      </Slide>
+    </Box>
   );
 }
 

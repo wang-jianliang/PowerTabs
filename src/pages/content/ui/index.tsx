@@ -8,9 +8,11 @@ import EmotionCacheProvider from './EmotionCacheProvider';
 refreshOnUpdate('pages/content');
 
 const root = document.createElement('div');
-root.id = 'chrome-extension-boilerplate-react-vite-content-view-root';
+root.id = 'power-tabs-content-view-root';
+root.style.position = 'fixed';
+root.style.zIndex = '2147483647';
 
-document.body.append(root);
+document.documentElement.append(root);
 
 const rootIntoShadow = document.createElement('div');
 rootIntoShadow.id = 'shadow-root';
