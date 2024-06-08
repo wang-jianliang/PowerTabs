@@ -33,7 +33,7 @@ const Popup = () => {
       </Flex>
       <Divider marginBottom={2} />
       <Text fontSize="xl" fontWeight="bold" textAlign="left">
-        Choose the position of the tabs
+        Choose the position of the trigger
       </Text>
       <RadioGroup
         marginTop={4}

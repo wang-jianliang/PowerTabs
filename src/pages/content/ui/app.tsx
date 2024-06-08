@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Image, Slide, StackDivider, VStack, Wrap, WrapItem } from '@chakra-ui/react';
+import { Box, Slide, StackDivider, VStack, Wrap, WrapItem } from '@chakra-ui/react';
 import { browser } from 'webextension-polyfill-ts';
-import ScaleButton from './ScaleButton';
+import ScaleBox from './ScaleBox';
 import useStorage from '@src/shared/hooks/useStorage';
 import settingsStorage from '@src/shared/storages/settingsStorage';
+import { TabButton } from '@pages/content/component/TabButton';
 
 // function shouldShowTabs(position, x, y) {
 //   console.log(`shouldShowTabs: ${position}, ${x}, ${y}`);
@@ -27,6 +28,8 @@ import settingsStorage from '@src/shared/storages/settingsStorage';
 //   return false;
 // }
 
+type Layout = 'vertical' | 'horizontal';
+type TabsPosition = 'left' | 'right' | 'top' | 'bottom';
 const siderStyles = {
   right: {
     right: '-4px',
@@ -40,6 +43,60 @@ const siderStyles = {
     width: '8px',
     top: '25vh',
   },
+  top: {
+    top: '-4px',
+    width: '50vw',
+    height: '8px',
+    left: '25vw',
+  },
+  topRight: {
+    top: '-4px',
+    width: '30vw',
+    height: '8px',
+    left: '70vw',
+  },
+  topLeft: {
+    top: '-4px',
+    width: '30vw',
+    height: '8px',
+    left: 0,
+  },
+  bottom: {
+    bottom: '-4px',
+    width: '50vw',
+    height: '8px',
+    left: '25vw',
+  },
+  bottomRight: {
+    bottom: '-4px',
+    width: '30vw',
+    height: '8px',
+    left: '71vw',
+  },
+  bottomLeft: {
+    bottom: '-4px',
+    width: '30vw',
+    height: '8px',
+    left: '-1vw',
+  },
+};
+const tabsStyles = {
+  right: {
+    right: 0,
+    top: 0,
+  },
+  left: {
+    left: 0,
+    top: 0,
+  },
+  top: {
+    top: 0,
+    left: 0,
+  },
+  bottom: {
+    bottom: 0,
+    left: 0,
+  },
 };
 
 function App() {
@@ -48,7 +105,8 @@ function App() {
   const [groupedTabs, setGroupedTabs] = useState({});
   const [groupField] = useState('windowId');
   const [position, setPosition] = useState(null);
-  const [style, setStyle] = useState({} as React.CSSProperties);
+  const [tabsPosition, setTabsPosition] = useState(null as TabsPosition | null);
+  const [layout, setLayout] = useState('vertical' as Layout);
   const settings = useStorage(settingsStorage);
 
   useEffect(() => {
@@ -64,18 +122,22 @@ function App() {
       case 'top':
       case 'topLeft':
       case 'topRight':
-        setStyle({ top: 0, width: '100vw', maxHeight: '50vh' });
+        setTabsPosition('top');
+        setLayout('horizontal');
         break;
       case 'bottom':
       case 'bottomLeft':
       case 'bottomRight':
-        setStyle({ bottom: 0, width: '100vw', maxHeight: '50vh' });
+        setTabsPosition('bottom');
+        setLayout('horizontal');
         break;
       case 'left':
-        setStyle({ left: 0, height: '100vh', maxWidth: '50vw' });
+        setTabsPosition('left');
+        setLayout('vertical');
         break;
       case 'right':
-        setStyle({ right: 0, top: 0, height: '100vh', maxWidth: '50vw' });
+        setTabsPosition('right');
+        setLayout('vertical');
         break;
     }
   }, [settings]);
@@ -106,20 +168,17 @@ function App() {
     }
   }, [show]);
 
-  const handleMouseOver = () => {
+  const handleMouseEnter = () => {
+    // const body = document.querySelector('body');
+    // if (body) {
+    //   body.style.position = 'fixed';
+    //   body.style.left = '40ch';
+    // }
     setShow(true);
   };
 
-  const handleMouseOut = () => {
+  const handleMouseLeave = () => {
     setShow(false);
-  };
-
-  const switchTab = (tabId: number, windowId: number) => {
-    browser.runtime.sendMessage({
-      command: 'active_tab',
-      tabId: tabId,
-      windowId: windowId,
-    });
   };
 
   // document.addEventListener('mouseleave', function (e) {
@@ -132,58 +191,59 @@ function App() {
   //     setShow(true);
   //   }
   // });
+  console.log('tabsPosition', tabsPosition);
+  console.log('position', position);
 
   return (
-    <Box>
-      <Box
-        onMouseOver={handleMouseOver}
-        position="fixed"
-        zIndex="10000"
-        backgroundColor="red"
-        borderRadius="4px"
-        cursor="ew-resize"
-        style={siderStyles[position]}></Box>
-      <Slide in={show}>
-        <Box
-          backgroundColor="#FFFFFF"
-          position="fixed"
-          zIndex="10000"
-          style={style}
-          overflowY="auto"
-          padding={3}
-          rounded="md"
-          shadow="md"
-          onMouseOut={handleMouseOut}>
-          <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
-            {Object.keys(groupedTabs).map((key, keyIndex) => (
-              <Wrap height="100%" key={keyIndex}>
-                {groupedTabs[key].map((tab, index) => (
-                  <WrapItem key={index}>
-                    <Box w="26ch">
-                      <ScaleButton
-                        textAlign="left"
-                        maxW="25ch"
-                        p={2}
-                        size="xs"
-                        variant="outline"
-                        bg="gray.50"
-                        colorScheme="blue"
-                        onClick={() => switchTab(tab.id, tab.windowId)}
-                        fontSize="small">
-                        <Image scale={1} height="1em" marginRight={1} src={tab.favIconUrl}></Image>
-                        <Box as="span" display="block" overflow="hidden" whiteSpace="nowrap" textOverflow="ellipsis">
-                          {tab.title}
-                        </Box>
-                      </ScaleButton>
-                    </Box>
-                  </WrapItem>
-                ))}
-              </Wrap>
-            ))}
-          </VStack>
-        </Box>
-      </Slide>
-    </Box>
+    tabsPosition &&
+    layout && (
+      <Box>
+        <Slide in={!show} direction={tabsPosition} style={{ width: 'max-content' }}>
+          <Box
+            onMouseEnter={handleMouseEnter}
+            position="fixed"
+            zIndex="10000"
+            backgroundColor="blue.500"
+            borderRadius="4px"
+            cursor="ew-resize"
+            style={siderStyles[position]}></Box>
+        </Slide>
+        <Slide in={show} direction={tabsPosition} style={{ width: 'max-content' }}>
+          <Box
+            id="tabs-container"
+            backgroundColor="#FFFFFF"
+            right={0}
+            zIndex="10000"
+            width={layout === 'vertical' ? 'min-content' : '100vw'}
+            height={layout === 'horizontal' ? '38vh' : '100vh'}
+            bgColor="gray.50"
+            overflowY="auto"
+            padding={3}
+            rounded="md"
+            shadow="md"
+            style={tabsStyles[tabsPosition]}
+            onMouseLeave={handleMouseLeave}>
+            <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
+              {Object.keys(groupedTabs).map((key, keyIndex) => (
+                <Wrap height="100%" key={keyIndex}>
+                  {groupedTabs[key].map((tab, index) => (
+                    <WrapItem key={index}>
+                      <Box paddingX={4}>
+                        <ScaleBox>
+                          <Box width={layout === 'vertical' ? '35ch' : 'max-content'}>
+                            <TabButton key={tab.id} tab={tab} />
+                          </Box>
+                        </ScaleBox>
+                      </Box>
+                    </WrapItem>
+                  ))}
+                </Wrap>
+              ))}
+            </VStack>
+          </Box>
+        </Slide>
+      </Box>
+    )
   );
 }
 
