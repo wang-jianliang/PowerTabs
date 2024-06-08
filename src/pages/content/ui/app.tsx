@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Slide, StackDivider, VStack, Wrap, WrapItem } from '@chakra-ui/react';
+import { Box, Slide, StackDivider, Switch, VStack, Wrap, WrapItem } from '@chakra-ui/react';
 import { browser } from 'webextension-polyfill-ts';
 import ScaleBox from './ScaleBox';
 import useStorage from '@src/shared/hooks/useStorage';
@@ -99,6 +99,48 @@ const tabsStyles = {
   },
 };
 
+function scaleBody(shrink: boolean, position: string) {
+  const body = document.querySelector('body');
+  if (body) {
+    if (!shrink) {
+      switch (position) {
+        case 'top':
+        case 'bottom':
+          body.style.transition = 'height 0.3s ease-in-out, transform 0.3s ease-in-out';
+          body.style.height = '100vh';
+          body.style.transform = 'translateY(0)';
+          return;
+        case 'left':
+        case 'right':
+          body.style.transition = 'width 0.3s ease-in-out, transform 0.3s ease-in-out';
+          body.style.width = '100vw';
+          body.style.transform = 'translateX(0)';
+          return;
+      }
+      return;
+    }
+    switch (position) {
+      case 'top':
+        body.style.transition = 'height 0.3s ease-in-out, transform 0.3s ease-in-out';
+        body.style.height = 'calc(100vh - 38vh)';
+        body.style.transform = 'translateY(38vh)';
+        return;
+      case 'bottom':
+        return;
+      case 'right':
+        body.style.transition = 'width 0.3s ease-in-out, transform 0.3s ease-in-out';
+        body.style.width = 'calc(100vw - 40ch)';
+        body.style.transform = '-40ch';
+        return;
+      case 'left':
+        body.style.transition = 'width 0.3s ease-in-out, transform 0.3s ease-in-out';
+        body.style.width = 'calc(100vw - 40ch)';
+        body.style.transform = 'translateX(40ch)';
+        return;
+    }
+  }
+}
+
 function App() {
   const [show, setShow] = useState(false);
   const [tabs, setTabs] = useState([]);
@@ -169,15 +211,12 @@ function App() {
   }, [show]);
 
   const handleMouseEnter = () => {
-    // const body = document.querySelector('body');
-    // if (body) {
-    //   body.style.position = 'fixed';
-    //   body.style.left = '40ch';
-    // }
+    scaleBody(true, tabsPosition);
     setShow(true);
   };
 
   const handleMouseLeave = () => {
+    scaleBody(false, tabsPosition);
     setShow(false);
   };
 
@@ -224,6 +263,9 @@ function App() {
             style={tabsStyles[tabsPosition]}
             onMouseLeave={handleMouseLeave}>
             <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
+              <Box w="100%" display="flex">
+                <Switch />
+              </Box>
               {Object.keys(groupedTabs).map((key, keyIndex) => (
                 <Wrap height="100%" key={keyIndex}>
                   {groupedTabs[key].map((tab, index) => (
