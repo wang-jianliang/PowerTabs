@@ -27,16 +27,15 @@ const Popup = () => {
     // browser.runtime.sendMessage({ command: 'save_position', position: position }).then(() => {});
   };
   return (
-    <Flex className="App" direction="column" padding={8}>
+    <Flex className="App" direction="column" padding={8} gap={4}>
       <Flex justifyContent="center">
         <Image src="../../../icon-small.png" alt="Power Tabs" borderRadius="full" boxSize="150px" />
       </Flex>
-      <Divider marginBottom={2} />
-      <Text fontSize="xl" fontWeight="bold" textAlign="left">
-        Choose the position of the trigger
+      <Divider />
+      <Text fontSize="18px" fontWeight="bold" textAlign="left">
+        Position of the trigger area
       </Text>
       <RadioGroup
-        marginTop={4}
         onChange={pos => {
           setPosition(pos);
           savePosition(pos as Position);
@@ -53,7 +52,11 @@ const Popup = () => {
         </Wrap>
       </RadioGroup>
       <Divider />
+      <Text fontSize="18px" fontWeight="bold" textAlign="left">
+        Tabs panel settings
+      </Text>
       <Switch
+        style={{ alignSelf: 'flex-start' }}
         isChecked={settings.pinned}
         onChange={event => setSettings(prev => ({ ...prev, pinned: event.target.checked }))}>
         Pin the tabs

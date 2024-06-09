@@ -28,6 +28,8 @@ import { STORAGE_KEY_SETTINGS } from '@root/utils/reload/constant';
 //   return false;
 // }
 
+const verticalTabsWidth = '42ch';
+
 type Layout = 'vertical' | 'horizontal';
 type TabsPosition = 'left' | 'right' | 'top' | 'bottom';
 const siderStyles = {
@@ -129,13 +131,13 @@ function scaleBody(shrink: boolean, position: string) {
         return;
       case 'right':
         body.style.transition = 'width 0.3s ease-in-out, transform 0.3s ease-in-out';
-        body.style.width = 'calc(100vw - 40ch)';
-        body.style.transform = '-40ch';
+        body.style.width = `calc(100vw - ${verticalTabsWidth})`;
+        body.style.transform = `-${verticalTabsWidth}`;
         return;
       case 'left':
         body.style.transition = 'width 0.3s ease-in-out, transform 0.3s ease-in-out';
-        body.style.width = 'calc(100vw - 40ch)';
-        body.style.transform = 'translateX(40ch)';
+        body.style.width = `calc(100vw - ${verticalTabsWidth})`;
+        body.style.transform = `translateX(${verticalTabsWidth})`;
         return;
     }
   }
@@ -189,6 +191,8 @@ function App() {
     if (settings.pinned) {
       setShow(true);
       scaleBody(true, tp);
+    } else {
+      scaleBody(false, tp);
     }
   }, [settings]);
 
@@ -265,7 +269,7 @@ function App() {
             backgroundColor="#FFFFFF"
             right={0}
             zIndex="10000"
-            width={layout === 'vertical' ? 'min-content' : '100vw'}
+            width={layout === 'vertical' ? '42ch' : '100vw'}
             height={layout === 'horizontal' ? '38vh' : '100vh'}
             bgColor="gray.50"
             overflowY="auto"
@@ -275,13 +279,18 @@ function App() {
             style={tabsStyles[tabsPosition]}
             onMouseLeave={handleMouseLeave}>
             <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
-              <Switch
-                isChecked={settings.pinned}
-                onChange={event => {
-                  setSettings(prev => ({ ...prev, pinned: event.target.checked }));
-                  scaleBody(event.target.checked, tabsPosition);
-                }}
-              />
+              <Box width="100%" display="inline-flex" justifyContent="space-between" paddingX={4}>
+                <Box />
+                <Box display="inline-flex" alignItems="center" gap={2}>
+                  <Box>Pin</Box>
+                  <Switch
+                    isChecked={settings.pinned}
+                    onChange={event => {
+                      setSettings(prev => ({ ...prev, pinned: event.target.checked }));
+                    }}
+                  />
+                </Box>
+              </Box>
               {Object.keys(groupedTabs).map((key, keyIndex) => (
                 <Wrap height="100%" key={keyIndex}>
                   {groupedTabs[key].map((tab, index) => (
