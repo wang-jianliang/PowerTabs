@@ -2,16 +2,16 @@ import React, { useEffect } from 'react';
 import '@pages/popup/Popup.css';
 import withSuspense from '@src/shared/hoc/withSuspense';
 import withErrorBoundary from '@src/shared/hoc/withErrorBoundary';
-import { Divider, Flex, Image, Radio, RadioGroup, Text, Wrap, WrapItem } from '@chakra-ui/react';
-import useStorage from '@src/shared/hooks/useStorage';
-import settingsStorage from '@src/shared/storages/settingsStorage';
+import { Divider, Flex, Image, Radio, RadioGroup, Switch, Text, Wrap, WrapItem } from '@chakra-ui/react';
+import { useStorage } from '@plasmohq/storage/hook';
 import { Position } from '@src/types';
+import { DEFAULT_SETTINGS, STORAGE_KEY_SETTINGS } from '@root/utils/reload/constant';
 
 const positions = ['topLeft', 'topRight', 'bottomLeft', 'bottomRight', 'top', 'bottom', 'left', 'right'] as const;
 
 const Popup = () => {
   const [position, setPosition] = React.useState('topLeft');
-  const settings = useStorage(settingsStorage);
+  const [settings, setSettings] = useStorage(STORAGE_KEY_SETTINGS, DEFAULT_SETTINGS);
 
   useEffect(() => {
     if (!settings) {
@@ -23,7 +23,7 @@ const Popup = () => {
     // });
   }, [settings]);
   const savePosition = (position: Position) => {
-    settingsStorage.setPosition(position);
+    setSettings({ ...settings, position });
     // browser.runtime.sendMessage({ command: 'save_position', position: position }).then(() => {});
   };
   return (
@@ -52,6 +52,12 @@ const Popup = () => {
           ))}
         </Wrap>
       </RadioGroup>
+      <Divider />
+      <Switch
+        isChecked={settings.pinned}
+        onChange={event => setSettings(prev => ({ ...prev, pinned: event.target.checked }))}>
+        Pin the tabs
+      </Switch>
     </Flex>
   );
 };

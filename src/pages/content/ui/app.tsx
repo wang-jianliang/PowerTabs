@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Slide, StackDivider, Switch, VStack, Wrap, WrapItem } from '@chakra-ui/react';
 import { browser } from 'webextension-polyfill-ts';
+import { useStorage } from '@plasmohq/storage/hook';
 import ScaleBox from './ScaleBox';
-import useStorage from '@src/shared/hooks/useStorage';
-import settingsStorage from '@src/shared/storages/settingsStorage';
 import { TabButton } from '@pages/content/component/TabButton';
+import { STORAGE_KEY_SETTINGS } from '@root/utils/reload/constant';
 
 // function shouldShowTabs(position, x, y) {
 //   console.log(`shouldShowTabs: ${position}, ${x}, ${y}`);
@@ -149,7 +149,8 @@ function App() {
   const [position, setPosition] = useState(null);
   const [tabsPosition, setTabsPosition] = useState(null as TabsPosition | null);
   const [layout, setLayout] = useState('vertical' as Layout);
-  const settings = useStorage(settingsStorage);
+  // const settings = useStorage(settingsStorage);
+  const [settings, setSettings] = useStorage(STORAGE_KEY_SETTINGS);
 
   useEffect(() => {
     // browser.runtime.sendMessage({ command: 'get_position' }).then(response => {
@@ -160,27 +161,34 @@ function App() {
       return;
     }
     setPosition(settings.position);
+    let tp: TabsPosition = 'right';
     switch (settings.position) {
       case 'top':
       case 'topLeft':
       case 'topRight':
-        setTabsPosition('top');
+        tp = 'top';
         setLayout('horizontal');
         break;
       case 'bottom':
       case 'bottomLeft':
       case 'bottomRight':
-        setTabsPosition('bottom');
+        tp = 'bottom';
         setLayout('horizontal');
         break;
       case 'left':
-        setTabsPosition('left');
+        tp = 'left';
         setLayout('vertical');
         break;
       case 'right':
-        setTabsPosition('right');
+        tp = 'right';
         setLayout('vertical');
         break;
+    }
+    setTabsPosition(tp);
+
+    if (settings.pinned) {
+      setShow(true);
+      scaleBody(true, tp);
     }
   }, [settings]);
 
@@ -211,12 +219,15 @@ function App() {
   }, [show]);
 
   const handleMouseEnter = () => {
-    scaleBody(true, tabsPosition);
+    // scaleBody(true, tabsPosition);
     setShow(true);
   };
 
   const handleMouseLeave = () => {
-    scaleBody(false, tabsPosition);
+    // scaleBody(false, tabsPosition);
+    if (settings.pinned) {
+      return;
+    }
     setShow(false);
   };
 
@@ -230,8 +241,9 @@ function App() {
   //     setShow(true);
   //   }
   // });
-  console.log('tabsPosition', tabsPosition);
-  console.log('position', position);
+  // console.log('tabsPosition', tabsPosition);
+  // console.log('position', position);
+  // console.log('settings', settings);
 
   return (
     tabsPosition &&
@@ -263,9 +275,13 @@ function App() {
             style={tabsStyles[tabsPosition]}
             onMouseLeave={handleMouseLeave}>
             <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
-              <Box w="100%" display="flex">
-                <Switch />
-              </Box>
+              <Switch
+                isChecked={settings.pinned}
+                onChange={event => {
+                  setSettings(prev => ({ ...prev, pinned: event.target.checked }));
+                  scaleBody(event.target.checked, tabsPosition);
+                }}
+              />
               {Object.keys(groupedTabs).map((key, keyIndex) => (
                 <Wrap height="100%" key={keyIndex}>
                   {groupedTabs[key].map((tab, index) => (
