@@ -289,7 +289,7 @@ function App() {
             onMouseEnter={handleMouseEnter}
             position="fixed"
             zIndex="10000"
-            backgroundColor="blue.500"
+            backgroundColor={`${settings.colorScheme}.500`}
             borderRadius="4px"
             cursor="ew-resize"
             style={siderStyles[position]}></Box>
