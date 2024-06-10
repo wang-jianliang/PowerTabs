@@ -5,28 +5,45 @@ import { useStorage } from '@plasmohq/storage/hook';
 import ScaleBox from './ScaleBox';
 import { TabButton } from '@pages/content/component/TabButton';
 import { STORAGE_KEY_SETTINGS } from '@root/utils/reload/constant';
+import { convertVwVhToPixels } from '@src/utils';
 
-// function shouldShowTabs(position, x, y) {
-//   console.log(`shouldShowTabs: ${position}, ${x}, ${y}`);
-//   if (position === 'topLeft') {
-//     return y <= 5 && x <= 200;
-//   } else if (position === 'topRight') {
-//     return y <= 5 && x >= window.innerWidth - 200;
-//   } else if (position === 'bottomLeft') {
-//     return y >= window.innerHeight - 5 && x <= 200;
-//   } else if (position === 'bottomRight') {
-//     return y >= window.innerHeight - 5 && x >= window.innerWidth - 200;
-//   } else if (position === 'top') {
-//     return y <= 5;
-//   } else if (position === 'bottom') {
-//     return y >= window.innerHeight - 5;
-//   } else if (position === 'left') {
-//     return x <= 5;
-//   } else if (position === 'right') {
-//     return x >= window.innerWidth - 5;
-//   }
-//   return false;
-// }
+function shouldShowTabs(position, x, y) {
+  console.log(`shouldShowTabs: ${position}, ${x}, ${y}`);
+  if (position === 'topLeft') {
+    return y <= 5 && x <= convertVwVhToPixels(siderStyles[position].width);
+  } else if (position === 'topRight') {
+    return y <= 5 && x >= window.innerWidth - convertVwVhToPixels(siderStyles[position].width);
+  } else if (position === 'bottomLeft') {
+    return y >= window.innerHeight - 5 && x <= convertVwVhToPixels(siderStyles[position].width);
+  } else if (position === 'bottomRight') {
+    return y >= window.innerHeight - 5 && x >= window.innerWidth - convertVwVhToPixels(siderStyles[position].width);
+  } else if (position === 'top') {
+    return (
+      y <= 5 &&
+      x >= convertVwVhToPixels(siderStyles[position].left) &&
+      x <= convertVwVhToPixels(siderStyles[position].left) + convertVwVhToPixels(siderStyles[position].width)
+    );
+  } else if (position === 'bottom') {
+    return (
+      y >= window.innerHeight - 5 &&
+      x >= convertVwVhToPixels(siderStyles[position].left) &&
+      x <= convertVwVhToPixels(siderStyles[position].left) + convertVwVhToPixels(siderStyles[position].width)
+    );
+  } else if (position === 'left') {
+    return (
+      x <= 5 &&
+      y >= convertVwVhToPixels(siderStyles[position].top) &&
+      y <= convertVwVhToPixels(siderStyles[position].top) + convertVwVhToPixels(siderStyles[position].height)
+    );
+  } else if (position === 'right') {
+    return (
+      x >= window.innerWidth - 5 &&
+      y >= convertVwVhToPixels(siderStyles[position].top) &&
+      y <= convertVwVhToPixels(siderStyles[position].top) + convertVwVhToPixels(siderStyles[position].height)
+    );
+  }
+  return false;
+}
 
 const verticalTabsWidth = '42ch';
 
@@ -155,10 +172,6 @@ function App() {
   const [settings, setSettings] = useStorage(STORAGE_KEY_SETTINGS);
 
   useEffect(() => {
-    // browser.runtime.sendMessage({ command: 'get_position' }).then(response => {
-    //   console.log(`position: ${response.position}`)
-    //   setPosition(response.position);
-    // });
     if (!settings) {
       return;
     }
@@ -224,7 +237,7 @@ function App() {
 
   const handleMouseEnter = () => {
     // scaleBody(true, tabsPosition);
-    setShow(true);
+    // setShow(true);
   };
 
   const handleMouseLeave = () => {
@@ -234,6 +247,22 @@ function App() {
     }
     setShow(false);
   };
+
+  function showOnMouseEvent(e) {
+    if (shouldShowTabs(position, e.clientX, e.clientY)) {
+      setShow(true);
+    }
+  }
+
+  useEffect(() => {
+    if (!position) {
+      return;
+    }
+    document.addEventListener('mousemove', showOnMouseEvent);
+    return () => {
+      document.removeEventListener('mousemove', showOnMouseEvent);
+    };
+  }, [position]);
 
   // document.addEventListener('mouseleave', function (e) {
   //   if (!position) {
