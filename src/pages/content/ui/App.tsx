@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Slide, StackDivider, Switch, VStack, Wrap, WrapItem } from '@chakra-ui/react';
+import { Box, Slide, StackDivider, Switch, VStack } from '@chakra-ui/react';
 import { browser } from 'webextension-polyfill-ts';
 import { useStorage } from '@plasmohq/storage/hook';
-import ScaleBox from './ScaleBox';
-import { TabButton } from '@pages/content/component/TabButton';
 import { STORAGE_KEY_SETTINGS } from '@root/utils/reload/constant';
 import { convertVwVhToPixels } from '@src/utils';
+import TabsGroup from '@pages/content/component/TabsGroup';
 
 function shouldShowTabs(position, x, y) {
   console.log(`shouldShowTabs: ${position}, ${x}, ${y}`);
@@ -319,20 +318,14 @@ function App() {
                   />
                 </Box>
               </Box>
-              {Object.keys(groupedTabs).map((key, keyIndex) => (
-                <Wrap height="100%" key={keyIndex}>
-                  {groupedTabs[key].map((tab, index) => (
-                    <WrapItem key={index}>
-                      <Box paddingX={4}>
-                        <ScaleBox>
-                          <Box width={layout === 'vertical' ? '35ch' : 'max-content'}>
-                            <TabButton key={tab.id} tab={tab} />
-                          </Box>
-                        </ScaleBox>
-                      </Box>
-                    </WrapItem>
-                  ))}
-                </Wrap>
+              {Object.keys(groupedTabs).map((key, i) => (
+                <TabsGroup
+                  name={groupField === 'windowId' ? `Window ${i} (${groupedTabs[key]?.length} tabs)` : key}
+                  key={key}
+                  groupKey={key}
+                  tabs={groupedTabs[key]}
+                  layout={layout}
+                />
               ))}
             </VStack>
           </Box>
