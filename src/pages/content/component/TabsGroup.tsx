@@ -17,7 +17,7 @@ function TabsGroup({
   tabs: browser.tabs.Tab[];
   layout: 'vertical' | 'horizontal';
 }) {
-  const [tabsCollapsed, setTabsCollapsed] = useStorage(`tabsCollapsed-${groupKey}`, true);
+  const [tabsCollapsed, setTabsCollapsed] = useStorage(`tabsCollapsed-${groupKey}`, false);
   const [settings] = useStorage(STORAGE_KEY_SETTINGS);
   return (
     <Stack>
@@ -28,7 +28,7 @@ function TabsGroup({
         onClick={() => setTabsCollapsed(!tabsCollapsed)}>
         {name}
       </Button>
-      <Collapse in={tabsCollapsed} animateOpacity>
+      <Collapse in={!tabsCollapsed} animateOpacity>
         <Wrap height="100%">
           {tabs.map((tab, index) => (
             <WrapItem key={index}>
