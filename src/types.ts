@@ -4,4 +4,5 @@ export interface Settings {
   position?: Position;
   pinned?: boolean;
   colorScheme?: string;
+  border?: boolean;
 }

@@ -31,7 +31,7 @@ export function TabButton({
       width="100%"
       p={2}
       size="s"
-      variant="outline"
+      variant={settings?.border ? 'outline' : 'ghost'}
       bg={tab.active && settings ? `${settings.colorScheme}.50` : 'white'}
       height={7}
       colorScheme={settings?.colorScheme}

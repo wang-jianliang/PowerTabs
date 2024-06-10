@@ -56,17 +56,13 @@ const Popup = () => {
       <Text fontSize="18px" fontWeight="bold" textAlign="left">
         Tabs panel settings
       </Text>
+      <Text textAlign="left">Pin tabs panel</Text>
       <Switch
         style={{ alignSelf: 'flex-start' }}
         isChecked={settings.pinned}
-        onChange={event => setSettings(prev => ({ ...prev, pinned: event.target.checked }))}>
-        Pin the tabs
-      </Switch>
+        onChange={event => setSettings(prev => ({ ...prev, pinned: event.target.checked }))}></Switch>
 
-      <Divider />
-      <Text fontSize="18px" fontWeight="bold" textAlign="left">
-        Color scheme
-      </Text>
+      <Text textAlign="left">Color scheme</Text>
       <RadioGroup
         onChange={t => {
           setSettings({ ...settings, colorScheme: t });
@@ -82,6 +78,12 @@ const Popup = () => {
           ))}
         </Wrap>
       </RadioGroup>
+
+      <Text textAlign="left">Border</Text>
+      <Switch
+        style={{ alignSelf: 'flex-start' }}
+        isChecked={settings.border}
+        onChange={event => setSettings(prev => ({ ...prev, border: event.target.checked }))}></Switch>
     </Flex>
   );
 };

@@ -9,4 +9,5 @@ export const DEFAULT_SETTINGS: Settings = {
   position: 'left',
   pinned: false,
   colorScheme: 'teal',
+  border: true,
 };
