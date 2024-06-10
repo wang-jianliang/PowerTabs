@@ -2,16 +2,17 @@ import React, { useEffect } from 'react';
 import '@pages/popup/Popup.css';
 import withSuspense from '@src/shared/hoc/withSuspense';
 import withErrorBoundary from '@src/shared/hoc/withErrorBoundary';
-import { Divider, Flex, Image, Radio, RadioGroup, Switch, Text, Wrap, WrapItem } from '@chakra-ui/react';
+import { Divider, Flex, Image, Radio, RadioGroup, Switch, Tag, Text, Wrap, WrapItem } from '@chakra-ui/react';
 import { useStorage } from '@plasmohq/storage/hook';
 import { Position } from '@src/types';
 import { DEFAULT_SETTINGS, STORAGE_KEY_SETTINGS } from '@root/utils/reload/constant';
 
 const positions = ['topLeft', 'topRight', 'bottomLeft', 'bottomRight', 'top', 'bottom', 'left', 'right'] as const;
+const colorSchemes = ['gray', 'red', 'orange', 'yellow', 'green', 'teal', 'blue', 'cyan', 'purple', 'pink'] as const;
 
 const Popup = () => {
   const [position, setPosition] = React.useState('topLeft');
-  const [settings, setSettings] = useStorage(STORAGE_KEY_SETTINGS, DEFAULT_SETTINGS);
+  const [settings, setSettings] = useStorage(STORAGE_KEY_SETTINGS, s => s || DEFAULT_SETTINGS);
 
   useEffect(() => {
     if (!settings) {
@@ -61,6 +62,26 @@ const Popup = () => {
         onChange={event => setSettings(prev => ({ ...prev, pinned: event.target.checked }))}>
         Pin the tabs
       </Switch>
+
+      <Divider />
+      <Text fontSize="18px" fontWeight="bold" textAlign="left">
+        Color scheme
+      </Text>
+      <RadioGroup
+        onChange={t => {
+          setSettings({ ...settings, colorScheme: t });
+        }}
+        value={settings.colorScheme}>
+        <Wrap spacing={3}>
+          {colorSchemes.map(c => (
+            <WrapItem key={c} width={40}>
+              <Radio key={c} value={c}>
+                <Tag colorScheme={c}>{c}</Tag>
+              </Radio>
+            </WrapItem>
+          ))}
+        </Wrap>
+      </RadioGroup>
     </Flex>
   );
 };

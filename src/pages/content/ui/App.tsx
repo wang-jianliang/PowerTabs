@@ -300,7 +300,6 @@ function App() {
             zIndex="10000"
             width={layout === 'vertical' ? '42ch' : '100vw'}
             height={layout === 'horizontal' ? '38vh' : '100vh'}
-            bgColor="gray.50"
             overflowY="auto"
             padding={3}
             rounded="md"

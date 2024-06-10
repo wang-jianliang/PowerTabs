@@ -3,4 +3,5 @@ export type Position = 'topLeft' | 'topRight' | 'bottomLeft' | 'bottomRight' | '
 export interface Settings {
   position?: Position;
   pinned?: boolean;
+  colorScheme?: string;
 }

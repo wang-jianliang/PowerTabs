@@ -27,6 +27,7 @@
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.8.2",
+    "@chakra-ui/theme-tools": "^2.1.2",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.1",
     "@plasmohq/storage": "^1.10.0",

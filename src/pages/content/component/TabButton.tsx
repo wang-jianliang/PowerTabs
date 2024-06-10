@@ -1,6 +1,8 @@
 import { Box, Button, Image } from '@chakra-ui/react';
 import React from 'react';
 import { browser } from 'webextension-polyfill-ts';
+import { useStorage } from '@plasmohq/storage/hook';
+import { STORAGE_KEY_SETTINGS } from '@root/utils/reload/constant';
 
 const switchTab = (tabId: number, windowId: number) => {
   browser.runtime.sendMessage({
@@ -18,8 +20,10 @@ export function TabButton({
     windowId: number;
     favIconUrl: string;
     title: string;
+    active: boolean;
   };
 }) {
+  const [settings] = useStorage(STORAGE_KEY_SETTINGS);
   return (
     <Button
       textAlign="left"
@@ -28,8 +32,9 @@ export function TabButton({
       p={2}
       size="s"
       variant="outline"
-      bg="white"
-      colorScheme="blue"
+      bg={tab.active && settings ? `${settings.colorScheme}.50` : 'white'}
+      height={7}
+      colorScheme={settings?.colorScheme}
       onClick={() => switchTab(tab.id, tab.windowId)}
       fontSize="small">
       <Image scale={1} height="1em" marginRight={1} src={tab.favIconUrl}></Image>

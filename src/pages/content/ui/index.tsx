@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import App from '@pages/content/ui/app';
+import App from '@pages/content/ui/App';
 import refreshOnUpdate from 'virtual:reload-on-update-in-view';
 import injectedStyle from './injected.css?inline';
 import CustomChakraProvider from './CustomChakraProvider';
