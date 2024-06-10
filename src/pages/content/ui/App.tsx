@@ -315,10 +315,21 @@ function App() {
                     Group By:
                   </Box>
                   <RadioGroup onChange={setGroupField} value={groupField} display="inline-flex" alignItems="center">
-                    <Radio key="windowId" value="windowId" colorScheme={settings.colorScheme} size="sm">
+                    <Radio
+                      key="windowId"
+                      value="windowId"
+                      colorScheme={settings.colorScheme}
+                      color={settings.colorScheme}
+                      size="sm">
                       Window
                     </Radio>
-                    <Radio key="url" value="url" colorScheme={settings.colorScheme} marginLeft={2} size="sm">
+                    <Radio
+                      key="url"
+                      value="url"
+                      colorScheme={settings.colorScheme}
+                      color={settings.colorScheme}
+                      marginLeft={2}
+                      size="sm">
                       Domain
                     </Radio>
                   </RadioGroup>
