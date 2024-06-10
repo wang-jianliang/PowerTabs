@@ -11,9 +11,10 @@ import {
 
 const theme = extendTheme({
   styles: {
-    fonts: {
-      heading: 'Cantarell',
-      body: 'Cantarell',
+    global: {
+      'html, body, button, span, div': {
+        fontFamily: 'sans-serif',
+      },
     },
   },
 });
