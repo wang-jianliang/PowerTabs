@@ -1,8 +1,7 @@
+import React from 'react';
 import { Box, Button, Collapse, Stack, Wrap, WrapItem } from '@chakra-ui/react';
 import ScaleBox from '@pages/content/ui/ScaleBox';
 import { TabButton } from '@pages/content/component/TabButton';
-import { browser } from 'webextension-polyfill-ts';
-import React from 'react';
 import { useStorage } from '@plasmohq/storage/hook';
 import { STORAGE_KEY_SETTINGS } from '@root/utils/reload/constant';
 
@@ -14,7 +13,13 @@ function TabsGroup({
 }: {
   name: string;
   groupKey: string;
-  tabs: browser.tabs.Tab[];
+  tabs: {
+    id: number;
+    windowId: number;
+    favIconUrl: string;
+    title: string;
+    active: boolean;
+  }[];
   layout: 'vertical' | 'horizontal';
 }) {
   const [tabsCollapsed, setTabsCollapsed] = useStorage(`tabsCollapsed-${groupKey}`, false);
