@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Slide, StackDivider, Switch, VStack } from '@chakra-ui/react';
+import { Box, Divider, Radio, RadioGroup, Slide, StackDivider, Switch, VStack } from '@chakra-ui/react';
 import { browser } from 'webextension-polyfill-ts';
 import { useStorage } from '@plasmohq/storage/hook';
-import { STORAGE_KEY_SETTINGS } from '@root/utils/reload/constant';
+import { STORAGE_KEY_GROUP_FIELD, STORAGE_KEY_SETTINGS } from '@root/utils/reload/constant';
 import { convertVwVhToPixels } from '@src/utils';
 import TabsGroup from '@pages/content/component/TabsGroup';
 
 function shouldShowTabs(position, x, y) {
-  console.log(`shouldShowTabs: ${position}, ${x}, ${y}`);
   if (position === 'topLeft') {
     return y <= 5 && x <= convertVwVhToPixels(siderStyles[position].width);
   } else if (position === 'topRight') {
@@ -163,7 +162,7 @@ function App() {
   const [show, setShow] = useState(false);
   const [tabs, setTabs] = useState([]);
   const [groupedTabs, setGroupedTabs] = useState({});
-  const [groupField] = useState('windowId');
+  const [groupField, setGroupField] = useStorage(STORAGE_KEY_GROUP_FIELD, 'windowId');
   const [position, setPosition] = useState(null);
   const [tabsPosition, setTabsPosition] = useState(null as TabsPosition | null);
   const [layout, setLayout] = useState('vertical' as Layout);
@@ -210,7 +209,10 @@ function App() {
 
   const groupTabs = (tabs, field: string) => {
     return tabs.reduce((acc, obj: object) => {
-      const key = obj[field] != null ? String(obj[field]) : '__undefined__';
+      let key = obj[field] != null ? String(obj[field]) : '__undefined__';
+      if (field === 'url') {
+        key = new URL(key).hostname;
+      }
       if (!acc[key]) {
         acc[key] = [];
       }
@@ -222,6 +224,7 @@ function App() {
   useEffect(() => {
     if (tabs.length > 0) {
       const ts = groupTabs(tabs, groupField);
+      console.log(ts);
       setGroupedTabs(ts);
     }
   }, [tabs, groupField]);
@@ -306,11 +309,28 @@ function App() {
             style={tabsStyles[tabsPosition]}
             onMouseLeave={handleMouseLeave}>
             <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
-              <Box width="100%" display="inline-flex" justifyContent="space-between" paddingX={4}>
-                <Box />
-                <Box display="inline-flex" alignItems="center" gap={2}>
-                  <Box>Pin</Box>
+              <Box width="100%" display="inline-flex" justifyContent="space-between" paddingX={4} alignItems="center">
+                <Box display="inline-flex" alignItems="center">
+                  <Box fontSize="var(--chakra-fontSizes-sm)" marginRight={2}>
+                    Group By:
+                  </Box>
+                  <RadioGroup onChange={setGroupField} value={groupField} display="inline-flex" alignItems="center">
+                    <Radio key="windowId" value="windowId" colorScheme={settings.colorScheme} size="sm">
+                      Window
+                    </Radio>
+                    <Radio key="url" value="url" colorScheme={settings.colorScheme} marginLeft={2} size="sm">
+                      Domain
+                    </Radio>
+                  </RadioGroup>
+                </Box>
+                <Divider height={5} orientation="vertical" borderColor="gray.200" />
+                <Box display="inline-flex" alignItems="center">
+                  <Box fontSize="var(--chakra-fontSizes-sm)" marginRight={2}>
+                    Pin:
+                  </Box>
                   <Switch
+                    size="sm"
+                    colorScheme={settings.colorScheme}
                     isChecked={settings.pinned}
                     onChange={event => {
                       setSettings(prev => ({ ...prev, pinned: event.target.checked }));
@@ -318,6 +338,7 @@ function App() {
                   />
                 </Box>
               </Box>
+
               {Object.keys(groupedTabs).map((key, i) => (
                 <TabsGroup
                   name={groupField === 'windowId' ? `Window ${i} (${groupedTabs[key]?.length} tabs)` : key}

@@ -9,7 +9,14 @@ import {
   ThemeProvider,
 } from '@chakra-ui/react';
 
-const theme = extendTheme();
+const theme = extendTheme({
+  styles: {
+    fonts: {
+      heading: 'Cantarell',
+      body: 'Cantarell',
+    },
+  },
+});
 
 const getCurrentTheme = () => {
   const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
