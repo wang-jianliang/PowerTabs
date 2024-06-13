@@ -1,4 +1,4 @@
-import { Box, Button, Image } from '@chakra-ui/react';
+import { Box, Button, CloseButton, Flex, Image } from '@chakra-ui/react';
 import { BiCurrentLocation } from 'react-icons/bi';
 import React from 'react';
 import { browser } from 'webextension-polyfill-ts';
@@ -40,16 +40,29 @@ export function TabButton({
       onClick={() => switchTab(tab.id, tab.windowId)}
       fontSize="small">
       {tab.active && <BiCurrentLocation />}
-      <Image scale={1} height="1em" marginLeft={2} marginRight={1} src={tab.favIconUrl}></Image>
-      <Box
-        as="span"
-        display="block"
-        overflow="hidden"
-        whiteSpace="nowrap"
-        textOverflow="ellipsis"
-        fontWeight={tab.active ? 'bold' : 'normal'}>
-        {tab.title}
-      </Box>
+      <Flex width="100%" justifyContent="center">
+        <Image scale={1} height="1em" marginLeft={2} marginRight={1} src={tab.favIconUrl}></Image>
+        <Box
+          as="span"
+          display="block"
+          overflow="hidden"
+          whiteSpace="nowrap"
+          textOverflow="ellipsis"
+          fontWeight={tab.active ? 'bold' : 'normal'}>
+          {tab.title}
+        </Box>
+      </Flex>
+      <CloseButton
+        size="sm"
+        onClick={event => {
+          event.stopPropagation();
+          browser.runtime.sendMessage({
+            command: 'close_tab',
+            tabId: tab.id,
+            windowId: tab.windowId,
+          });
+        }}
+      />
     </Button>
   );
 }

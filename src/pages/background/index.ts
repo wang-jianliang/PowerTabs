@@ -10,6 +10,7 @@ reloadOnUpdate('pages/background');
 reloadOnUpdate('pages/content/style.scss');
 
 browser.runtime.onMessage.addListener(async request => {
+  console.log('background.js', 'onMessage', request);
   if (request.command === 'get_tabs') {
     return await browser.tabs
       .query({})
@@ -28,6 +29,13 @@ browser.runtime.onMessage.addListener(async request => {
           alert(`Failed to active tab: ${request.tabId}: ${error}`);
         });
     });
+  } else if (request.command === 'close_tab') {
+    browser.tabs
+      .remove(request.tabId)
+      .then(() => {})
+      .catch(error => {
+        alert(`Failed to close tab: ${request.tabId}: ${error}`);
+      });
   } else if (request.command === 'get_position') {
     return await browser.storage.sync
       .get('position')
