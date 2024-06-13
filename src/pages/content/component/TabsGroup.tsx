@@ -3,7 +3,7 @@ import { Box, Button, Collapse, Stack, Wrap, WrapItem } from '@chakra-ui/react';
 import ScaleBox from '@pages/content/ui/ScaleBox';
 import { TabButton } from '@pages/content/component/TabButton';
 import { useStorage } from '@plasmohq/storage/hook';
-import { STORAGE_KEY_SETTINGS } from '@root/utils/reload/constant';
+import { DEFAULT_SETTINGS, STORAGE_KEY_SETTINGS } from '@root/utils/reload/constant';
 
 function TabsGroup({
   name,
@@ -23,7 +23,7 @@ function TabsGroup({
   layout: 'vertical' | 'horizontal';
 }) {
   const [tabsCollapsed, setTabsCollapsed] = useStorage(`tabsCollapsed-${groupKey}`, false);
-  const [settings] = useStorage(STORAGE_KEY_SETTINGS);
+  const [settings] = useStorage(STORAGE_KEY_SETTINGS, DEFAULT_SETTINGS);
   return (
     <Stack>
       <Button

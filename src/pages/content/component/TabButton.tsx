@@ -3,7 +3,7 @@ import { BiCurrentLocation } from 'react-icons/bi';
 import React from 'react';
 import { browser } from 'webextension-polyfill-ts';
 import { useStorage } from '@plasmohq/storage/hook';
-import { STORAGE_KEY_SETTINGS } from '@root/utils/reload/constant';
+import { DEFAULT_SETTINGS, STORAGE_KEY_SETTINGS } from '@root/utils/reload/constant';
 
 const switchTab = (tabId: number, windowId: number) => {
   browser.runtime.sendMessage({
@@ -24,7 +24,7 @@ export function TabButton({
     active: boolean;
   };
 }) {
-  const [settings] = useStorage(STORAGE_KEY_SETTINGS);
+  const [settings] = useStorage(STORAGE_KEY_SETTINGS, DEFAULT_SETTINGS);
   return (
     <Button
       textAlign="left"

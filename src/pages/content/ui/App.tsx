@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Divider, Radio, RadioGroup, Slide, StackDivider, Switch, VStack } from '@chakra-ui/react';
 import { browser } from 'webextension-polyfill-ts';
 import { useStorage } from '@plasmohq/storage/hook';
-import { STORAGE_KEY_GROUP_FIELD, STORAGE_KEY_SETTINGS } from '@root/utils/reload/constant';
+import { DEFAULT_SETTINGS, STORAGE_KEY_GROUP_FIELD, STORAGE_KEY_SETTINGS } from '@root/utils/reload/constant';
 import { convertVwVhToPixels } from '@src/utils';
 import TabsGroup from '@pages/content/component/TabsGroup';
 
@@ -166,8 +166,7 @@ function App() {
   const [position, setPosition] = useState(null);
   const [tabsPosition, setTabsPosition] = useState(null as TabsPosition | null);
   const [layout, setLayout] = useState('vertical' as Layout);
-  // const settings = useStorage(settingsStorage);
-  const [settings, setSettings] = useStorage(STORAGE_KEY_SETTINGS);
+  const [settings, setSettings] = useStorage(STORAGE_KEY_SETTINGS, DEFAULT_SETTINGS);
 
   useEffect(() => {
     if (!settings) {

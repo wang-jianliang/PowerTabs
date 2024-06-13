@@ -7,7 +7,7 @@ export const STORAGE_KEY_SETTINGS = 'settings';
 export const STORAGE_KEY_GROUP_FIELD = 'groupField';
 
 export const DEFAULT_SETTINGS: Settings = {
-  position: 'left',
+  position: 'right',
   pinned: false,
   colorScheme: 'teal',
   border: true,
