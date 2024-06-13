@@ -26,6 +26,7 @@ function TabsGroup({
 }) {
   const [tabsCollapsed, setTabsCollapsed] = useStorage(`tabsCollapsed-${groupKey}`, false);
   const [settings] = useStorage(STORAGE_KEY_SETTINGS, DEFAULT_SETTINGS);
+  console.log(tabs);
   return (
     <Stack>
       <Button
@@ -38,17 +39,19 @@ function TabsGroup({
       </Button>
       <Collapse in={!tabsCollapsed} animateOpacity>
         <Wrap height="100%">
-          {tabs.map((tab, index) => (
-            <WrapItem key={index}>
-              <Box paddingX={4}>
-                <ScaleBox>
-                  <Box width={layout === 'vertical' ? '35ch' : 'max-content'}>
-                    <TabButton key={tab.id} tab={tab} />
-                  </Box>
-                </ScaleBox>
-              </Box>
-            </WrapItem>
-          ))}
+          {tabs
+            .sort((a, b) => b.id - a.id)
+            .map((tab, index) => (
+              <WrapItem key={index}>
+                <Box paddingX={4}>
+                  <ScaleBox>
+                    <Box width={layout === 'vertical' ? '35ch' : 'max-content'}>
+                      <TabButton key={tab.id} tab={tab} />
+                    </Box>
+                  </ScaleBox>
+                </Box>
+              </WrapItem>
+            ))}
         </Wrap>
       </Collapse>
     </Stack>
