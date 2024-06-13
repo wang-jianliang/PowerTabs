@@ -37,13 +37,13 @@ function TabsGroup({
         <Image scale={1} height="1em" marginLeft={2} marginRight={1} src={iconUrl}></Image>
         {name} ({tabs.length}) {tabsCollapsed ? '▼' : '▲'}
       </Button>
-      <Collapse in={!tabsCollapsed} animateOpacity>
-        <Wrap height="100%">
+      <Collapse in={!tabsCollapsed} animateOpacity style={{ overflow: 'visible' }}>
+        <Wrap height="100%" justify="center">
           {tabs
             .sort((a, b) => b.id - a.id)
             .map((tab, index) => (
               <WrapItem key={index}>
-                <Box paddingX={4}>
+                <Box paddingX={4} zIndex={10001} position="relative">
                   <ScaleBox>
                     <Box width={layout === 'vertical' ? '35ch' : 'max-content'}>
                       <TabButton key={tab.id} tab={tab} />

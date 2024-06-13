@@ -285,7 +285,7 @@ function App() {
             backgroundColor="#FFFFFF"
             right={0}
             zIndex="10000"
-            width={layout === 'vertical' ? '42ch' : '100vw'}
+            width={layout === 'vertical' ? '44ch' : '100vw'}
             height={layout === 'horizontal' ? '38vh' : '100vh'}
             overflowY="auto"
             padding={3}
