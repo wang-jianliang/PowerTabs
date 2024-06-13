@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, Collapse, Stack, Wrap, WrapItem } from '@chakra-ui/react';
+import { Box, Button, Collapse, Image, Stack, Wrap, WrapItem } from '@chakra-ui/react';
 import ScaleBox from '@pages/content/ui/ScaleBox';
 import { TabButton } from '@pages/content/component/TabButton';
 import { useStorage } from '@plasmohq/storage/hook';
@@ -10,9 +10,11 @@ function TabsGroup({
   groupKey,
   tabs,
   layout = 'vertical',
+  iconUrl,
 }: {
   name: string;
   groupKey: string;
+  iconUrl?: string | undefined;
   tabs: {
     id: number;
     windowId: number;
@@ -28,10 +30,11 @@ function TabsGroup({
     <Stack>
       <Button
         colorScheme={settings?.colorScheme}
-        variant="solid"
+        variant={settings?.border ? 'solid' : 'outline'}
         size="sm"
         onClick={() => setTabsCollapsed(!tabsCollapsed)}>
-        {name}
+        <Image scale={1} height="1em" marginLeft={2} marginRight={1} src={iconUrl}></Image>
+        {name} ({tabs.length}) {tabsCollapsed ? '▼' : '▲'}
       </Button>
       <Collapse in={!tabsCollapsed} animateOpacity>
         <Wrap height="100%">

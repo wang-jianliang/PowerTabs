@@ -265,20 +265,6 @@ function App() {
     };
   }, [position]);
 
-  // document.addEventListener('mouseleave', function (e) {
-  //   if (!position) {
-  //     return;
-  //   }
-  //   console.log('mouseleave', e.clientX, e.clientY);
-  //   if (shouldShowTabs(position, e.clientX, e.clientY)) {
-  //     console.log('show tabs');
-  //     setShow(true);
-  //   }
-  // });
-  // console.log('tabsPosition', tabsPosition);
-  // console.log('position', position);
-  // console.log('settings', settings);
-
   return (
     tabsPosition &&
     layout && (
@@ -351,7 +337,8 @@ function App() {
 
               {Object.keys(groupedTabs).map((key, i) => (
                 <TabsGroup
-                  name={groupField === 'windowId' ? `Window ${i} (${groupedTabs[key]?.length} tabs)` : key}
+                  iconUrl={groupField === 'windowId' ? undefined : groupedTabs[key][0].favIconUrl}
+                  name={groupField === 'windowId' ? `Window ${i}` : key}
                   key={key}
                   groupKey={key}
                   tabs={groupedTabs[key]}
