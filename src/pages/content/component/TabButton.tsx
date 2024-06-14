@@ -33,14 +33,15 @@ export function TabButton({
       p={2}
       size="s"
       variant={settings?.border ? 'outline' : 'ghost'}
+      justifyContent="space-between"
       // variant={tab.active ? 'solid' : settings?.border ? 'outline' : 'ghost'}
       bg={tab.active && settings ? `${settings.colorScheme}.50` : 'white'}
       height={7}
       colorScheme={settings?.colorScheme}
       onClick={() => switchTab(tab.id, tab.windowId)}
-      fontSize="small">
+      fontSize="13px">
       {tab.active && <BiCurrentLocation />}
-      <Flex width="100%" justifyContent="center">
+      <Flex width={tab.active ? '88%' : '92%'} justifyContent="center">
         <Image scale={1} height="1em" marginLeft={2} marginRight={1} src={tab.favIconUrl}></Image>
         <Box
           as="span"
