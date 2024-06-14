@@ -1,10 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Divider, Radio, RadioGroup, Slide, StackDivider, Switch, VStack } from '@chakra-ui/react';
+import {
+  Box,
+  Divider,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Radio,
+  RadioGroup,
+  Slide,
+  StackDivider,
+  Switch,
+  VStack,
+} from '@chakra-ui/react';
 import { browser } from 'webextension-polyfill-ts';
 import { useStorage } from '@plasmohq/storage/hook';
 import { DEFAULT_SETTINGS, STORAGE_KEY_GROUP_FIELD, STORAGE_KEY_SETTINGS } from '@src/constant';
 import { convertVwVhToPixels } from '@src/utils';
 import TabsGroup from '@pages/content/component/TabsGroup';
+import { SearchIcon } from '@chakra-ui/icons';
 
 function shouldShowTabs(position, x, y) {
   if (position === 'topLeft') {
@@ -375,6 +388,32 @@ function App() {
                   />
                 </Box>
               </Box>
+              <InputGroup
+                onChange={e => {
+                  const filter = (e.target as HTMLInputElement).value;
+                  if (filter.length > 0) {
+                    const filteredTabs = tabs.filter(
+                      tab =>
+                        tab.title.toLowerCase().includes(filter.toLowerCase()) ||
+                        tab.url.toLowerCase().includes(filter.toLowerCase()),
+                    );
+                    setGroupedTabs(groupTabs(filteredTabs, groupField));
+                  } else {
+                    setGroupedTabs(groupTabs(tabs, groupField));
+                  }
+                }}>
+                <InputLeftElement pointerEvents="none" height="100%">
+                  <SearchIcon color={settings.colorScheme} />
+                </InputLeftElement>
+                <Input
+                  variant="outline"
+                  colorScheme={settings.colorScheme}
+                  borderColor="gray.200"
+                  borderRadius={18}
+                  placeholder="Filter"
+                  size="sm"
+                />
+              </InputGroup>
 
               {Object.keys(groupedTabs).map((key, i) => (
                 <TabsGroup
