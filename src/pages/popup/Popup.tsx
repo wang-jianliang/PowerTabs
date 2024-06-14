@@ -5,7 +5,7 @@ import withErrorBoundary from '@src/shared/hoc/withErrorBoundary';
 import { Divider, Flex, Image, Radio, RadioGroup, Switch, Tag, Text, Wrap, WrapItem } from '@chakra-ui/react';
 import { useStorage } from '@plasmohq/storage/hook';
 import { Position } from '@src/types';
-import { DEFAULT_SETTINGS, STORAGE_KEY_SETTINGS } from '@root/utils/reload/constant';
+import { DEFAULT_SETTINGS, STORAGE_KEY_SETTINGS } from '@src/constant';
 
 const positions = ['topLeft', 'topRight', 'bottomLeft', 'bottomRight', 'top', 'bottom', 'left', 'right'] as const;
 const colorSchemes = ['gray', 'red', 'orange', 'yellow', 'green', 'teal', 'blue', 'cyan', 'purple', 'pink'] as const;

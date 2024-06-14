@@ -1,4 +1,4 @@
-import { LOCAL_RELOAD_SOCKET_URL } from './constant';
+import { LOCAL_RELOAD_SOCKET_URL } from '@src/constant';
 import MessageInterpreter from './interpreter';
 
 let needToUpdate = false;

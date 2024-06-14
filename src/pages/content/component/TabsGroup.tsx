@@ -3,7 +3,7 @@ import { Box, Button, Collapse, Image, Stack, Wrap, WrapItem } from '@chakra-ui/
 import ScaleBox from '@pages/content/ui/ScaleBox';
 import { TabButton } from '@pages/content/component/TabButton';
 import { useStorage } from '@plasmohq/storage/hook';
-import { DEFAULT_SETTINGS, STORAGE_KEY_SETTINGS } from '@root/utils/reload/constant';
+import { DEFAULT_SETTINGS, STORAGE_KEY_SETTINGS } from '@src/constant';
 
 function TabsGroup({
   name,
