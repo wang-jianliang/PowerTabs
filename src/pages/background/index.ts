@@ -54,3 +54,31 @@ browser.runtime.onMessage.addListener(async request => {
       });
   }
 });
+
+// listen for tab close and open events, then send a message to the content script of the active tab
+browser.tabs.onRemoved.addListener(tabId => {
+  console.log('tab closed', tabId);
+  browser.tabs.query({}).then(tabs => {
+    if (tabs.length === 0) {
+      return;
+    }
+    for (const tab of tabs) {
+      browser.tabs.sendMessage(tab.id, { command: 'tab_closed', tabId });
+    }
+  });
+});
+
+browser.tabs.onCreated.addListener(newTab => {
+  console.log('tab created', newTab);
+  browser.tabs.query({}).then(tabs => {
+    if (tabs.length === 0) {
+      return;
+    }
+    for (const tab of tabs) {
+      if (tab.status !== 'complete') {
+        continue;
+      }
+      browser.tabs.sendMessage(tab.id, { command: 'tab_created', newTab });
+    }
+  });
+});

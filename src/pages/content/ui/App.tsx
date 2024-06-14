@@ -265,6 +265,47 @@ function App() {
     };
   }, [position]);
 
+  const showRef = React.useRef(show);
+  React.useEffect(() => {
+    showRef.current = show;
+  }, [show]);
+
+  // listen for tab close and open events from background script, then update the tabs state
+  useEffect(() => {
+    const handleTabsUpdate = async request => {
+      console.log('tabs update', request);
+      if (request.command === 'tab_closed' || request.command === 'tab_created') {
+        console.log('updating tabs', showRef.current);
+        if (showRef.current) {
+          browser.runtime.sendMessage({ command: 'get_tabs' }).then(response => {
+            setTabs(response.tabs);
+          });
+        }
+      }
+    };
+    browser.runtime.onMessage.addListener(handleTabsUpdate);
+    return () => {
+      browser.runtime.onMessage.removeListener(handleTabsUpdate);
+    };
+  }, []);
+
+  // when current tab is re-active, get all tabs
+  useEffect(() => {
+    const handleTabActivated = async activeInfo => {
+      if (!showRef.current) {
+        return;
+      }
+      console.log('tab activated', activeInfo);
+      browser.runtime.sendMessage({ command: 'get_tabs' }).then(response => {
+        setTabs(response.tabs);
+      });
+    };
+    document.addEventListener('visibilitychange', handleTabActivated);
+    return () => {
+      document.removeEventListener('visibilitychange', handleTabActivated);
+    };
+  }, []);
+
   return (
     tabsPosition &&
     layout && (
