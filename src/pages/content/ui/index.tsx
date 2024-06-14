@@ -4,11 +4,6 @@ import refreshOnUpdate from 'virtual:reload-on-update-in-view';
 import injectedStyle from './injected.css?inline';
 import CustomChakraProvider from './CustomChakraProvider';
 import EmotionCacheProvider from './EmotionCacheProvider';
-import { DEBUG } from '@src/constant';
-
-if (!DEBUG) {
-  console.log = () => {};
-}
 
 refreshOnUpdate('pages/content');
 

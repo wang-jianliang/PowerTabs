@@ -1,10 +1,5 @@
 import reloadOnUpdate from 'virtual:reload-on-update-in-background-script';
 import { browser } from 'webextension-polyfill-ts';
-import { DEBUG } from '@src/constant';
-
-if (!DEBUG) {
-  console.log = () => {};
-}
 
 reloadOnUpdate('pages/background');
 
