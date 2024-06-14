@@ -43,7 +43,7 @@ function shouldShowTabs(position, x, y) {
   return false;
 }
 
-const verticalTabsWidth = '42ch';
+const verticalTabsWidth = '380px';
 
 type Layout = 'vertical' | 'horizontal';
 type TabsPosition = 'left' | 'right' | 'top' | 'bottom';
@@ -326,7 +326,7 @@ function App() {
             backgroundColor="#FFFFFF"
             right={0}
             zIndex="10000"
-            width={layout === 'vertical' ? '44ch' : '100vw'}
+            width={layout === 'vertical' ? verticalTabsWidth : '100vw'}
             height={layout === 'horizontal' ? '38vh' : '100vh'}
             overflowY="auto"
             padding={3}
