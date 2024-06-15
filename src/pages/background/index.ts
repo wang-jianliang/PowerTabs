@@ -67,7 +67,10 @@ browser.tabs.onRemoved.addListener(tabId => {
       return;
     }
     for (const tab of tabs) {
-      browser.tabs.sendMessage(tab.id, { command: 'tab_closed', tabId });
+      console.log('sending tab_closed message', tab.id, tab);
+      browser.tabs.sendMessage(tab.id, { command: 'tab_closed', tabId }).catch(error => {
+        console.log('Failed to send tab_closed message:', error);
+      });
     }
   });
 });
@@ -82,7 +85,9 @@ browser.tabs.onCreated.addListener(newTab => {
       if (tab.status !== 'complete') {
         continue;
       }
-      browser.tabs.sendMessage(tab.id, { command: 'tab_created', newTab });
+      browser.tabs.sendMessage(tab.id, { command: 'tab_created', newTab }).catch(error => {
+        console.log('Failed to send tab_created message:', error);
+      });
     }
   });
 });
