@@ -12,8 +12,9 @@ import {
 const theme = extendTheme({
   styles: {
     global: {
-      'html, body, button, span, div': {
+      'html, body, button, input, span, div': {
         fontFamily: 'sans-serif',
+        fontSize: '14px !important',
       },
     },
   },

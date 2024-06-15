@@ -28,11 +28,14 @@ function TabsGroup({
   const [settings] = useStorage(STORAGE_KEY_SETTINGS, DEFAULT_SETTINGS);
   console.log(tabs);
   return (
-    <Stack>
+    <Stack alignItems="center">
       <Button
         colorScheme={settings?.colorScheme}
         variant={settings?.border ? 'solid' : 'outline'}
         size="sm"
+        fontSize="14px"
+        height="32px"
+        width="332px"
         onClick={() => setTabsCollapsed(!tabsCollapsed)}>
         <Image scale={1} height="1em" marginLeft={2} marginRight={1} src={iconUrl}></Image>
         {name} ({tabs.length}) {tabsCollapsed ? '▼' : '▲'}
@@ -45,7 +48,7 @@ function TabsGroup({
               <WrapItem key={index}>
                 <Box paddingX={4} zIndex={10001} position="relative">
                   <ScaleBox>
-                    <Box width={layout === 'vertical' ? '35ch' : 'max-content'}>
+                    <Box width={layout === 'vertical' ? '314px' : 'max-content'}>
                       <TabButton key={tab.id} tab={tab} />
                     </Box>
                   </ScaleBox>

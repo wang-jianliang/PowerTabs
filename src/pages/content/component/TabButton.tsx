@@ -31,13 +31,13 @@ export function TabButton({
       textAlign="left"
       maxW="100%"
       width="100%"
+      height="30px"
       p={2}
       size="s"
       variant={settings?.border ? 'outline' : 'ghost'}
       justifyContent="space-between"
       // variant={tab.active ? 'solid' : settings?.border ? 'outline' : 'ghost'}
       bg={tab.active && settings ? `${settings.colorScheme}.50` : 'white'}
-      height={7}
       colorScheme={settings?.colorScheme}
       onClick={() => switchTab(tab.id, tab.windowId)}
       fontSize="13px"
@@ -63,7 +63,7 @@ export function TabButton({
         </Box>
       }>
       {tab.active && <BiCurrentLocation />}
-      <Flex width={tab.active ? '88%' : '89%'} justifyContent="center">
+      <Flex width={tab.active ? '80%' : '89%'} justifyContent="center">
         <Image scale={1} height="1em" marginLeft={2} marginRight={1} src={tab.favIconUrl}></Image>
         <Box
           as="span"

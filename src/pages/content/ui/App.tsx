@@ -347,7 +347,7 @@ function App() {
             shadow="md"
             style={tabsStyles[tabsPosition]}
             onMouseLeave={handleMouseLeave}>
-            <VStack divider={<StackDivider borderColor="gray.200" />} spacing={4} align="stretch">
+            <VStack divider={<StackDivider borderColor="gray.200" />} spacing="16px" align="stretch">
               <Box width="100%" display="inline-flex" justifyContent="space-between" paddingX={4} alignItems="center">
                 <Box display="inline-flex" alignItems="center">
                   <Box fontSize="var(--chakra-fontSizes-sm)" marginRight={2}>
@@ -406,6 +406,7 @@ function App() {
                   <SearchIcon color={settings.colorScheme} />
                 </InputLeftElement>
                 <Input
+                  height="32px"
                   variant="outline"
                   colorScheme={settings.colorScheme}
                   borderColor="gray.200"
