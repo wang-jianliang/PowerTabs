@@ -1,9 +1,10 @@
-import { Box, Button, CloseButton, Flex, Image } from '@chakra-ui/react';
+import { Box, Button, Flex, Image } from '@chakra-ui/react';
 import { BiCurrentLocation } from 'react-icons/bi';
 import React from 'react';
 import { browser } from 'webextension-polyfill-ts';
 import { useStorage } from '@plasmohq/storage/hook';
 import { DEFAULT_SETTINGS, STORAGE_KEY_SETTINGS } from '@root/utils/reload/constant';
+import { CloseIcon } from '@chakra-ui/icons';
 
 const switchTab = (tabId: number, windowId: number) => {
   browser.runtime.sendMessage({
@@ -39,9 +40,30 @@ export function TabButton({
       height={7}
       colorScheme={settings?.colorScheme}
       onClick={() => switchTab(tab.id, tab.windowId)}
-      fontSize="13px">
+      fontSize="13px"
+      rightIcon={
+        <Box
+          borderRadius={3}
+          marginY={2}
+          fontSize="10px"
+          _hover={{
+            cursor: 'pointer',
+            backgroundColor: 'gray.50',
+          }}
+          padding={1}
+          onClick={event => {
+            event.stopPropagation();
+            browser.runtime.sendMessage({
+              command: 'close_tab',
+              tabId: tab.id,
+              windowId: tab.windowId,
+            });
+          }}>
+          <CloseIcon />
+        </Box>
+      }>
       {tab.active && <BiCurrentLocation />}
-      <Flex width={tab.active ? '88%' : '92%'} justifyContent="center">
+      <Flex width={tab.active ? '88%' : '89%'} justifyContent="center">
         <Image scale={1} height="1em" marginLeft={2} marginRight={1} src={tab.favIconUrl}></Image>
         <Box
           as="span"
@@ -53,17 +75,6 @@ export function TabButton({
           {tab.title}
         </Box>
       </Flex>
-      <CloseButton
-        size="sm"
-        onClick={event => {
-          event.stopPropagation();
-          browser.runtime.sendMessage({
-            command: 'close_tab',
-            tabId: tab.id,
-            windowId: tab.windowId,
-          });
-        }}
-      />
     </Button>
   );
 }
