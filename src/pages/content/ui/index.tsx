@@ -5,6 +5,10 @@ import injectedStyle from './injected.css?inline';
 import CustomChakraProvider from './CustomChakraProvider';
 import EmotionCacheProvider from './EmotionCacheProvider';
 
+if (process.env.NODE_ENV !== 'development') {
+  console.log = () => {};
+}
+
 refreshOnUpdate('pages/content');
 
 const root = document.createElement('div');

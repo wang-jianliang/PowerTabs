@@ -1,6 +1,10 @@
 import reloadOnUpdate from 'virtual:reload-on-update-in-background-script';
 import { browser } from 'webextension-polyfill-ts';
 
+if (process.env.NODE_ENV !== 'development') {
+  console.log = () => {};
+}
+
 reloadOnUpdate('pages/background');
 
 /**
